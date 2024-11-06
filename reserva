@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página de Reserva</title>
+  <style>
+    /* Estilos básicos */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    #reservar-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #reservar-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #mensaje {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Reserva tu turno</h1>
+  <button id="reservar-btn">Reservar</button>
+  <p id="mensaje"></p>
+
+  <script>
+    // Selecciona los elementos
+    const reservarBtn = document.getElementById("reservar-btn");
+    const mensaje = document.getElementById("mensaje");
+
+    // Función para comprobar si el usuario ya hizo una reserva hoy
+    function verificarReserva() {
+      const ultimaReserva = localStorage.getItem("ultimaReserva");
+      
+      if (ultimaReserva) {
+        const fechaUltimaReserva = new Date(ultimaReserva);
+        const hoy = new Date();
+        
+        // Verifica si la última reserva fue hoy
+        if (
+          fechaUltimaReserva.getDate() === hoy.getDate() &&
+          fechaUltimaReserva.getMonth() === hoy.getMonth() &&
+          fechaUltimaReserva.getFullYear() === hoy.getFullYear()
+        ) {
+          // Si ya reservó hoy, deshabilita el botón
+          reservarBtn.disabled = true;
+          mensaje.textContent = "Ya has reservado tu turno para hoy. Intenta de nuevo mañana.";
+        } else {
+          // Si no es hoy, habilita el botón
+          reservarBtn.disabled = false;
+        }
+      }
+    }
+
+    // Función para reservar
+    function reservar() {
+      const ahora = new Date();
+      localStorage.setItem("ultimaReserva", ahora);
+      
+      reservarBtn.disabled = true;
+      mensaje.textContent = "Reserva realizada. Vuelve mañana para otra reserva.";
+    }
+
+    // Agrega el evento al botón de reserva
+    reservarBtn.addEventListener("click", reservar);
+
+    // Ejecuta la verificación al cargar la página
+    verificarReserva();
+  </script>
+</body>
+</html>
